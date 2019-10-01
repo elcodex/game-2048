@@ -1,0 +1,8 @@
+@import "blocks/board.css";
+@import "blocks/board__tile.css";
+
+html, body {
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+} 

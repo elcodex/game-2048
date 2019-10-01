@@ -1,0 +1,9 @@
+.board {
+  --tile-size: calc(90vmin / 4 - 10px);
+  width: calc(4 * var(--tile-size) + 5px * 3);
+  display: grid;
+  grid-template-columns: repeat(4, var(--tile-size));
+  grid-template-rows: repeat(4, var(--tile-size)); 
+  gap: 5px;
+  margin: 5px auto;
+}

@@ -1,0 +1,2 @@
+@import "blocks/board.css";
+@import "blocks/board__tile.css"; 
