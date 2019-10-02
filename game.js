@@ -151,18 +151,28 @@ const setNewTile = _ => {
 
 const viewNewTile = ({position, score}) => {
   const selector = `.board__tile[data-position="${position[0].toString() + position[1].toString()}"]`;
-  document.querySelector(selector).innerText = score;
+  let tile = document.querySelector(selector);
+  tile.innerText = score;
+  tile.classList.add(`tile-${score}`);
 }
 const viewNewBoard = moves => {
-  [...document.getElementsByClassName('board__tile')].forEach(tile => tile.innerText = '');
+  [...document.getElementsByClassName('board__tile')].forEach(tile => {
+    const score = tile.innerText;
+    tile.classList.remove(`tile-${score}`);
+    tile.innerText = '';
+  });
   for (let i = 0; i < moves.length; i++) {
     for (let j = 0; j < moves[i].length; j++) {
       if (moves[i][j].moveTo.length > 0) {
         const selector = 
           `.board__tile[data-position="${moves[i][j].moveTo[0].toString() + moves[i][j].moveTo[1].toString()}"]`;
         const tile = document.querySelector(selector);
-        if (tile.innerText*1 < moves[i][j].score)
+        const tileScore = tile.innerText*1;
+        if (tileScore < moves[i][j].score) {
+          tile.classList.remove(`tile-${tileScore}`);
+          tile.classList.add(`tile-${moves[i][j].score}`);
           tile.innerText = moves[i][j].score;
+        }
       }
     }
   }
@@ -176,4 +186,21 @@ const play = _ => {
 
 play();
 
+const testTileColors = _ => {
+  board = [[2, 4, 8, 16], [32, 64, 128, 256], [512, 1024, 2048, 0], [0, 0, 0, 0]];
+  let i = 0;
+  let j = 0;
+  [...document.getElementsByClassName('board__tile')].forEach(tile => {
+    if (j === 4) {
+      j = 0;
+      i++;
+    }
+    if (board[i][j] > 0) {
+      tile.innerText = board[i][j];
+      tile.classList.add(`tile-${board[i][j]}`);
+    }
+    j++;
+  });
+}
 
+//testTileColors();

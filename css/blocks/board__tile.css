@@ -3,3 +3,36 @@
   font-size: 3em;
   text-align: center;
 }
+.tile-2 {
+  background-color: hsl(120, 100%, 90%);
+}
+.tile-4 {
+  background-color: hsl(120, 100%, 80%);
+}
+.tile-8 {
+  background-color: hsl(120, 100%, 50%);
+}
+.tile-16 {
+  background-color: hsl(120, 100%, 30%);
+}
+.tile-32 {
+  background-color: hsl(60, 100%, 80%);
+}
+.tile-64 {
+  background-color: hsl(60, 100%, 50%);
+}
+.tile-128 {
+  background-color: hsl(30, 100%, 70%);
+}
+.tile-256 {
+  background-color: hsl(30, 100%, 50%);
+}
+.tile-512 {
+  background-color: hsl(20, 100%, 40%);
+}
+.tile-1024 {
+  background-color: hsl(20, 100%, 50%);
+}
+.tile-2048 {
+  background-color: hsl(0, 100%, 50%);
+}
