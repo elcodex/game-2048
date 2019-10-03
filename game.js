@@ -2,39 +2,42 @@ const probabilityOfTwo = 90;
 let board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]; /*start*/
 
 const playerTurn = _ => {
-  document.addEventListener('keydown', (event) => {
+  const handleKeydownEvent = (event) => {
+    console.log('listener');
     let direction = '';
     if (event.code === 'ArrowDown'  || event.code === 'KeyS') {
-      console.log('down');
+      //console.log('down');
       direction = 'down';
     }
     if (event.code === 'ArrowLeft'  || event.code === 'KeyA') {
-      console.log('left');
+      //console.log('left');
       direction = 'left';
     }
     if (event.code === 'ArrowUp'    || event.code === 'KeyW') {
-      console.log('up');
+      //console.log('up');
       direction = 'up';
     }
     if (event.code === 'ArrowRight' || event.code === 'KeyD') {
-      console.log('right');
+      //console.log('right');
       direction = 'right';
     }
     
     if (direction !== '') {
-      const {success, moves} = moveTiles(direction);
-      //TODO not success 
-      console.table(moves.map(row => row.map(({moveTo, score}) => `${moveTo}, ${score}`)));
-      viewNewBoard(moves);
-      if (!isGameOver()) { 
+      event.preventDefault();
+      const {success, moves} = moveTiles(direction); 
+      if (success) {
+        console.log(success);
+        viewNewBoard(moves);
         let newTile = setNewTile();
         viewNewTile(newTile);
-      } else {
-        //TODO game is over
-      }
-    }  
-    event.preventDefault();
-  });
+        if (isGameOver()) { 
+          console.log('game is over');
+          document.removeEventListener('keydown', handleKeydownEvent);
+        }
+      }  
+    }
+  }
+  document.addEventListener('keydown', handleKeydownEvent);
 }
 
 const isGameOver = _ => {
@@ -48,7 +51,7 @@ const isGameOver = _ => {
 }
 
 const moveTiles = direction => {
-  //let success = false;
+  let success = false;
   let moves = [];
   for (let i = 0; i < board.length; i++) {
     moves.push([]);
@@ -81,7 +84,11 @@ const moveTiles = direction => {
             lastTileScore = board[i][j];
           }
         }
-        //if (moveTo !== [] || score !== board[i][j]) success = true; 
+        if (!success &&
+            ((moveTo.length > 0 && (moveTo[0] !== i || moveTo[1] !== j)) || 
+             score !== board[i][j])) {
+          success = true;
+        }
         moves[i][j] = {moveTo, score};
       }  
     }
@@ -111,21 +118,25 @@ const moveTiles = direction => {
             lastTileScore = board[i][j];
           }
         }
-        //if (moveTo !== [] || score !== board[i][j]) success = true; 
+        if (!success && 
+            ((moveTo.length > 0 && (moveTo[0] !== i || moveTo[1] !== j)) ||
+             score !== board[i][j])) {
+          success = true;
+        }  
         moves[i][j] = {moveTo, score};
       }
     }
   }
-  console.log(moves);
+//  console.log(moves);
   board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
   moves.forEach(row => row.forEach(({moveTo, score}) => {
-    console.log(moveTo);
+  //  console.log(moveTo);
     if (moveTo.length > 0 && board[moveTo[0]][moveTo[1]] < score) {
       board[moveTo[0]][moveTo[1]] = score;
     }
   }));
   
-  return {success: true, moves};
+  return {success, moves};
 }
 
 const setNewTile = _ => {
@@ -185,6 +196,8 @@ const play = _ => {
 }
 
 play();
+
+//tests
 
 const testTileColors = _ => {
   board = [[2, 4, 8, 16], [32, 64, 128, 256], [512, 1024, 2048, 0], [0, 0, 0, 0]];
