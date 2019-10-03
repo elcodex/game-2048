@@ -26,12 +26,16 @@ const playerTurn = _ => {
       event.preventDefault();
       const {success, moves} = moveTiles(direction); 
       if (success) {
-        console.log(success);
+        const highestScorePosition = getHighestScorePosition();
+        console.log(highestScorePosition);
         viewNewBoard(moves);
         let newTile = setNewTile();
         viewNewTile(newTile);
         if (isGameOver()) { 
-          console.log('game is over');
+          const highestScorePosition = getHighestScorePosition();
+          gameOverBoard(highestScorePosition);
+          viewGameOver(board[highestScorePosition[0]][highestScorePosition[1]]);
+         // console.log('game over', board);
           document.removeEventListener('keydown', handleKeydownEvent);
         }
       }  
@@ -160,6 +164,39 @@ const setNewTile = _ => {
   };
 }
 
+const getHighestScorePosition = _ => {
+  return board.reduce((position, row, i) => {
+    position = row.reduce((_position, tile, j) => {
+      if (board[_position[0]][_position[1]] < tile) {
+        _position = [i, j];
+      }
+      return _position;
+    }, position);
+    return position;
+  }, [0,0]);
+}
+
+const gameOverBoard = (highestScorePosition) => {
+  const text = ['G', 'A', 'M', 'E', 'O', 'V', 'E', 'R'];
+  let textPosition = 0;
+  board.forEach((row, i) => {
+    row.forEach((tile, j) => {
+      if (i === highestScorePosition[0]) {
+        if (j !== highestScorePosition[1]) {
+          board[i][j] = 0;
+        }
+      } else if (textPosition < text.length) {
+        board[i][j] = text[textPosition];
+        textPosition++;
+      } else {
+        board[i][j] = 0;
+      }
+    })
+  });
+}
+
+//view
+
 const viewNewTile = ({position, score}) => {
   const selector = `.board__tile[data-position="${position[0].toString() + position[1].toString()}"]`;
   let tile = document.querySelector(selector);
@@ -189,6 +226,37 @@ const viewNewBoard = moves => {
   }
 }
 
+const viewGameOver = highestScore => {
+  let i = 0;
+  let j = 0;
+  [...document.getElementsByClassName('board__tile')].forEach(tile => {
+    if (j === 4) {
+      j = 0;
+      i++;
+    }
+    const text = tile.innerText;
+    if (text !== '') {
+      tile.classList.remove(`tile-${text}`);
+      tile.innerText = '';
+    }
+    if (board[i][j] > 0) {
+      tile.innerText = board[i][j];
+      tile.classList.add(`tile-${board[i][j]}`);
+      /*
+      let p = document.createElement('p');
+      p.innerText = 'Start';
+      p.classList.add('text-new-game');
+      tile.appendChild(p);
+      */
+    }
+    if (board[i][j] >= 'A' && board[i][j] <= 'Z') {
+      tile.innerText = board[i][j];
+      tile.classList.add(`tile-letter-${highestScore}`);
+    }
+    j++;
+  });
+}
+
 const play = _ => {
   let newTile = setNewTile();
   viewNewTile(newTile);
@@ -216,4 +284,30 @@ const testTileColors = _ => {
   });
 }
 
+const testGameOverScreen = _ => {
+  board = [['G', 'A', 'M', 'E'], ['O', 'V', 'E', 'R'], [0, 0, 0, 0], [0, 16, 0, 0]];
+  let i = 0;
+  let j = 0;
+  [...document.getElementsByClassName('board__tile')].forEach(tile => {
+    if (j === 4) {
+      j = 0;
+      i++;
+    }
+    if (board[i][j] > 0) {
+      tile.innerText = board[i][j];
+      tile.classList.add(`tile-${board[i][j]}`);
+      let p = document.createElement('p');
+      p.innerText = 'Start';
+      p.classList.add('text-new-game');
+      tile.appendChild(p);
+    }
+    if (board[i][j] >= 'A' && board[i][j] <= 'Z') {
+      tile.innerText = board[i][j];
+      tile.classList.add(`tile-letter-${16}`);
+    }
+    j++;
+  });
+}
+
 //testTileColors();
+//testGameOverScreen();

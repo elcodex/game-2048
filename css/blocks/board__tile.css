@@ -36,3 +36,63 @@
 .tile-2048 {
   background-color: hsl(0, 100%, 50%);
 }
+.tile-letter-2 {
+  color: hsl(120, 100%, 90%);
+  background-color: hsl(0, 0%, 20%);
+  font-size: 4em;
+}
+.tile-letter-4 {
+  color: hsl(120, 100%, 80%);
+  background-color: hsl(0, 0%, 20%);
+  font-size: 4em;
+}
+.tile-letter-8 {
+  color: hsl(120, 100%, 50%);
+  background-color: hsl(0, 0%, 20%);
+  font-size: 4em;
+}
+.tile-letter-16 {
+  color: hsl(120, 100%, 30%);
+  background-color: hsl(0, 0%, 20%);
+  font-size: 4em;
+}
+.tile-letter-32 {
+  color: hsl(60, 100%, 80%);
+  background-color: hsl(0, 0%, 20%);
+  font-size: 4em;
+}
+.tile-letter-64 {
+  color: hsl(60, 100%, 50%);
+  background-color: hsl(0, 0%, 20%);
+  font-size: 4em;
+}
+.tile-letter-128 {
+  color: hsl(30, 100%, 70%);
+  background-color: hsl(0, 0%, 20%);
+  font-size: 4em;
+}
+.tile-letter-256 {
+  color: hsl(30, 100%, 50%);
+  background-color: hsl(0, 0%, 20%);
+  font-size: 4em;
+}
+.tile-letter-512 {
+  color: hsl(20, 100%, 40%);
+  background-color: hsl(0, 0%, 20%);
+  font-size: 4em;
+}
+.tile-letter-1024 {
+  color: hsl(20, 100%, 50%);
+  background-color: hsl(0, 0%, 20%);
+  font-size: 4em;
+}
+.tile-letter-2048 {
+  color: hsl(0, 100%, 50%);
+  background-color: hsl(0, 0%, 20%);
+  font-size: 4em;
+}
+.text-new-game {
+  margin: 0;
+  padding: 0;
+  font-size: 0.9em;
+}
