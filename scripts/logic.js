@@ -34,15 +34,17 @@ const game = _ => {
 
     const turn = direction => {
         const toLeft = _ => {
-            board = board.map(row => {
+            let isSomethingChanged = false;
+            let newBoard = board.map(row => {
                 let newRow = [];
                 let lastTile = undefined;
                 row.forEach(tile => {
                     if (tile !== 0) {
-                        console.log(tile);
+                        //console.log(tile);
                         if (lastTile && lastTile === tile) {
                             lastTile *= 2;
                             newRow.push(lastTile);
+                            isSomethingChanged = true;
                             lastTile = undefined;
                         } 
                         else if (lastTile && lastTile !== tile) {
@@ -60,9 +62,17 @@ const game = _ => {
                 while (newRow.length < row.length) {
                     newRow.push(0);
                 }
-                console.log(newRow.join(','));
+                if (!isSomethingChanged) {
+                    isSomethingChanged = newRow.some((tile, i) => tile !== row[i]); 
+                }
+                
                 return newRow;
             });
+            if (isSomethingChanged) {
+                board = newBoard.map(row => row.map(tile => tile));
+            }
+            console.log(isSomethingChanged);
+            return isSomethingChanged;
         }
         
         const reverseRows = _ => {
@@ -76,30 +86,32 @@ const game = _ => {
                 }
             }
         }
-
+        let isSomethingChanged = false;
         if (direction === 'left') {
-            toLeft();
+            isSomethingChanged = toLeft();
         }
         if (direction === 'right') {
             reverseRows();
-            toLeft();
+            isSomethingChanged = toLeft();
             reverseRows();
         }
         if (direction === 'up') {
             transposeBoard();
-            toLeft();
+            isSomethingChanged = toLeft();
             transposeBoard();
         }
         if (direction === 'down') {
             transposeBoard();
             reverseRows();
-            toLeft();
+            isSomethingChanged = toLeft();
             reverseRows();
             transposeBoard();        
         }
 
-        setNewTile();
-        console.log(board);
+        if (isSomethingChanged) {
+            setNewTile();
+        }
+        //console.log(board);
         return board;
     }
 
