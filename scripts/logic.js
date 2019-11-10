@@ -116,7 +116,20 @@ const game = _ => {
     }
 
     const isOver = _ => {
-        return board.every(row => row.every(tile => tile > 0)) ||
+        const doesTurnExist =  _ => {
+            return board.some((row, i) => row.some((tile, j) => {
+                return [{di: 0, dj: -1}, {di: -1, dj: 0}, 
+                 {di: 0, dj: 1}, {di: 1, dj: 0}].some(({di, dj}) => {
+                    if (i + di >= 0 && i + di < board.length &&
+                        j + dj >= 0 && j + dj < row.length) {
+                            return tile === board[i+di][j+dj];
+                    }
+                    return false;
+                });
+            }));
+        }
+
+        return (board.every(row => row.every(tile => tile > 0)) && !doesTurnExist()) ||
                board.some(row => row.includes(winScore));
     }
     
