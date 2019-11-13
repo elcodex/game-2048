@@ -42,9 +42,8 @@ const viewGameOverBoard = maxScore => {
         setTimeout(_ => {
             let tileText = tile.querySelector('.tile__text');
             if (tileText.innerText !== maxScore.toString()) {
-                tileText.innerText = maxScore.toString();
-
                 tile.classList.remove(`tile-${tileText.innerText}`);
+                tileText.innerText = maxScore.toString();
                 tile.classList.add(`tile-${maxScore}`);
             }
         }, TIMER);
