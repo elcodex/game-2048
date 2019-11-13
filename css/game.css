@@ -5,4 +5,38 @@ html, body {
   max-height: 100%;
   margin: 0;
   padding: 0;
+}
+html {
+  font-size: 6vmin;
 } 
+
+body {
+  background-color: #394F67;
+}
+
+.container {
+  --tile-size: calc(90vmin / 4 - 10px);
+  width: calc(4 * var(--tile-size) + 10px * 3);
+  margin: auto;
+  font-family: "PT Serif", serif;
+}
+header {
+  text-align: right;
+  padding: 10px 0;
+}
+
+@media screen and (min-width: 550px) {
+  html {
+    font-size: 6vmin;
+  } 
+}
+
+@media screen and (min-width: 780px) {
+  .container {
+    --tile-size: calc(780px / 4 - 10px);
+  }
+
+  html {
+    font-size: 6vmin;
+  } 
+}
