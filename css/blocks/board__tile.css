@@ -1,40 +1,43 @@
 .board__tile {
-  border: 1px solid darkgreen;
-  font-size: 3em;
-  text-align: center;
+  box-sizing: border-box;
+  border: 0.2rem solid rgba(0,0,0, 0.2);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .tile-2 {
-  background-color: hsl(120, 100%, 90%);
+  background-color: #A9FD94;
 }
 .tile-4 {
-  background-color: hsl(120, 100%, 80%);
+  background-color: #80E84A;
 }
 .tile-8 {
-  background-color: hsl(120, 100%, 50%);
+  background-color: #41C63F;
 }
 .tile-16 {
-  background-color: hsl(120, 100%, 30%);
+  background-color: #1B9419;
 }
 .tile-32 {
-  background-color: hsl(60, 100%, 80%);
+  background-color: #F7FA2E;
 }
 .tile-64 {
-  background-color: hsl(60, 100%, 50%);
+  background-color: #F6E122;
 }
 .tile-128 {
-  background-color: hsl(30, 100%, 70%);
+  background-color: #F8CF1A;
 }
 .tile-256 {
-  background-color: hsl(30, 100%, 50%);
+  background-color: #FA940F;
 }
 .tile-512 {
-  background-color: hsl(20, 100%, 40%);
+  background-color: #FC6D12;
 }
 .tile-1024 {
-  background-color: hsl(20, 100%, 50%);
+  background-color: #E6141B;
 }
 .tile-2048 {
-  background-color: hsl(0, 100%, 50%);
+  background-color: #C00305;
 }
 .tile-letter-2 {
   color: hsl(120, 100%, 90%);
