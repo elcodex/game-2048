@@ -2,28 +2,74 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif:400" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Parisienne&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="css/game.css">
-    <title>2048</title>
+    <title>game 2048</title>
   </head>
   <body>
-    <div class="board">
-      <div class="board__tile" data-position="00"></div>
-      <div class="board__tile" data-position="01"></div>
-      <div class="board__tile" data-position="02"></div>
-      <div class="board__tile" data-position="03"></div>
-      <div class="board__tile" data-position="10"></div>
-      <div class="board__tile" data-position="11"></div>
-      <div class="board__tile" data-position="12"></div>
-      <div class="board__tile" data-position="13"></div>
-      <div class="board__tile" data-position="20"></div>
-      <div class="board__tile" data-position="21"></div>
-      <div class="board__tile" data-position="22"></div>
-      <div class="board__tile" data-position="23"></div>
-      <div class="board__tile" data-position="30"></div>
-      <div class="board__tile" data-position="31"></div>
-      <div class="board__tile" data-position="32"></div>
-      <div class="board__tile" data-position="33"></div>
+    <div class="container">
+      <header>
+        <div class="logo">2048</div> 
+      </header>
+      <div class="board">
+        <div class="board__tile" data-position="00">
+          <div class="tile__text"></div>
+        </div>
+        <div class="board__tile" data-position="01">
+          <div class="tile__text"></div>
+        </div>
+        <div class="board__tile" data-position="02">
+          <div class="tile__text"></div>
+        </div>
+        <div class="board__tile" data-position="03">
+          <div class="tile__text"></div>
+        </div>
+        <div class="board__tile" data-position="10">
+          <div class="tile__text"></div>
+        </div>
+        <div class="board__tile" data-position="11">
+          <div class="tile__text"></div>
+        </div>
+        <div class="board__tile" data-position="12">
+          <div class="tile__text"></div>
+        </div>
+        <div class="board__tile" data-position="13">
+          <div class="tile__text"></div>
+        </div>
+        <div class="board__tile" data-position="20">
+          <div class="tile__text"></div>        
+        </div>
+        <div class="board__tile" data-position="21">
+          <div class="tile__text"></div>
+        </div>
+        <div class="board__tile" data-position="22">
+          <div class="tile__text"></div>
+        </div>
+        <div class="board__tile" data-position="23">
+          <div class="tile__text"></div>
+        </div>
+        <div class="board__tile" data-position="30">
+          <div class="tile__text"></div>
+        </div>
+        <div class="board__tile" data-position="31">
+          <div class="tile__text"></div>
+        </div>
+        <div class="board__tile" data-position="32">
+          <div class="tile__text"></div>
+        </div>
+        <div class="board__tile" data-position="33">
+          <div class="tile__text"></div>
+        </div>
+      </div>
+      <nav>
+        <button class="btn-newgame">Restart</button>
+      </nav>
     </div>
+
+    <script src="scripts/logic.js"></script>
+    <script src="scripts/view.js"></script>
     <script src="game.js"></script>
   </body>  
 </html>
