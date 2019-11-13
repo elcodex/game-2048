@@ -1,5 +1,0 @@
-.board__tile {
-  border: 1px solid darkgreen;
-  font-size: 20%;
-  text-align: center;
-}
