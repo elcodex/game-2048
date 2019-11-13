@@ -1,5 +1,6 @@
 @import "blocks/board.css";
 @import "blocks/board__tile.css";
+@import "blocks/header.css";
 
 html, body {
   max-height: 100%;
@@ -11,7 +12,8 @@ html {
 } 
 
 body {
-  background-color: #394F67;
+  --background-color: #394F67;
+  background-color: var(--background-color);
 }
 
 .container {
@@ -31,12 +33,12 @@ header {
   } 
 }
 
-@media screen and (min-width: 780px) {
+@media screen and (min-width: 900px) {
   .container {
     --tile-size: calc(780px / 4 - 10px);
   }
 
   html {
-    font-size: 6vmin;
+    font-size: 48px;
   } 
 }
