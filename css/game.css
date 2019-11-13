@@ -1,6 +1,7 @@
 @import "blocks/board.css";
 @import "blocks/board__tile.css";
 @import "blocks/header.css";
+@import "blocks/nav.css";
 
 html, body {
   max-height: 100%;
@@ -19,12 +20,9 @@ body {
 .container {
   --tile-size: calc(90vmin / 4 - 10px);
   width: calc(4 * var(--tile-size) + 10px * 3);
-  margin: auto;
+  margin: 0.5rem auto;
   font-family: "PT Serif", serif;
-}
-header {
-  text-align: right;
-  padding: 10px 0;
+  color: #152639;
 }
 
 @media screen and (min-width: 550px) {
