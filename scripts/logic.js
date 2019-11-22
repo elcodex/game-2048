@@ -4,7 +4,9 @@ const game = (userBoard) => {
     const initialBoard = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
     const winScore = 2048;
 
-    let board = userBoard ? userBoard : initialBoard;
+    let board = userBoard ? 
+        userBoard.map(row => row.map(tile => tile)) : 
+        initialBoard.map(row => row.map(tile => tile));
     
     const setNewTile = () => {
         let emptyTiles = [];
@@ -24,8 +26,8 @@ const game = (userBoard) => {
         }
     }
 
-    const start = () => {
-        board = initialBoard;
+    const start = () => {  
+        board = initialBoard.map(row => row.map(tile => tile));
         setNewTile();
         return board;
     }
@@ -82,7 +84,7 @@ const game = (userBoard) => {
                 let [from, to] = (dx === -1) ? 
                     [0, board.length] : 
                     [board.length - 1, -1];
-                let newBoard = initialBoard;
+                let newBoard = initialBoard.map(row => row.map(tile => tile));;
                 for (let j = 0; j < board.length; j++) {
                     let newColumn = [];
                     let lastTile = undefined;
@@ -137,7 +139,7 @@ const game = (userBoard) => {
             if (isSomethingChanged) {
                 board = newBoard.map(row => row.map(tile => tile));
             }
-            //console.log(isSomethingChanged);
+
             return isSomethingChanged;
         }
         
@@ -175,8 +177,9 @@ const game = (userBoard) => {
             }));
         }
 
-        return (board.every(row => row.every(tile => tile > 0)) && !doesTurnExist()) ||
-               board.some(row => row.includes(winScore));
+        const noEmptyTiles = board.every(row => row.every(tile => tile > 0));
+        const hasWinScore = board.some(row => row.includes(winScore));
+        return (noEmptyTiles && !doesTurnExist()) || hasWinScore;
     }
     
     const maxScore = () => {
