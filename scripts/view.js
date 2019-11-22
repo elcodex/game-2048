@@ -37,15 +37,12 @@ const viewTurnBoard = board => {
 }
 
 const viewGameOverBoard = maxScore => {
-    const TIMER = 0;
     [...document.getElementsByClassName('board__tile')].forEach(tile => {
-        setTimeout(_ => {
-            let tileText = tile.querySelector('.tile__text');
-            if (tileText.innerText !== maxScore.toString()) {
-                tile.classList.remove(`tile-${tileText.innerText}`);
-                tileText.innerText = maxScore.toString();
-                tile.classList.add(`tile-${maxScore}`);
-            }
-        }, TIMER);
+        let tileText = tile.querySelector('.tile__text');
+        if (tileText.innerText !== maxScore.toString()) {
+            tile.classList.remove(`tile-${tileText.innerText}`);
+            tileText.innerText = maxScore.toString();
+            tile.classList.add(`tile-${maxScore}`);
+        }
     });
 }
