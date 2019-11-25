@@ -21,7 +21,7 @@ body {
   --tile-size: calc(90vmin / 4 - 10px);
   width: calc(4 * var(--tile-size) + 10px * 3);
   margin: 0.5rem auto;
-  font-family: "PT Serif", serif;
+  font-family: "PT Sans", "Segoe UI", "Verdana", "Helvetica", sans;
   color: #152639;
 }
 
