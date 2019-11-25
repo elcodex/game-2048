@@ -1,5 +1,14 @@
+const makeTurn = direction => {
+    viewTurnBoard(game2048.turn(direction));
+    if (game2048.isOver()) {
+        setTimeout(() => {
+            viewGameOverBoard(game2048.maxScore());
+            document.removeEventListener('keydown', handleKeydownEvent);
+        }, 500);
+    }
+} 
+
 const handleKeydownEvent = event => {
-    //console.log(board);
     let direction = '';
     if (event.code === 'ArrowDown'  || event.code === 'KeyS') {
         //console.log('down');
@@ -20,16 +29,77 @@ const handleKeydownEvent = event => {
     
     if (direction !== '') {
         event.preventDefault();
-      
-        viewTurnBoard(game2048.turn(direction));
-        if (game2048.isOver()) {
-            setTimeout(() => {
-                viewGameOverBoard(game2048.maxScore());
-                document.removeEventListener('keydown', handleKeydownEvent);
-            }, 500);
-        }
-        
+        makeTurn(direction);
     }
+}
+
+let startTouch = undefined;
+const handleTouchStartEvent = event => {
+    event.preventDefault();
+
+    if (event.changedTouches.length > 1) {
+        return;
+    }
+
+    startTouch = {
+        x: event.changedTouches[0].pageX,
+        y: event.changedTouches[0].pageY,
+        id: event.changedTouches[0].identifier
+    }
+}
+
+const handleTouchEndEvent = event => {
+    event.preventDefault();
+
+    if (!startTouch) {
+        return;
+    }
+    if (event.changedTouches.length > 1 ||
+        startTouch.id !== event.changedTouches[0].identifier) {
+            startTouch = undefined;
+            return;
+    }
+    
+    const endTouch = {
+        x: event.changedTouches[0].pageX, 
+        y: event.changedTouches[0].pageY,
+        id: event.changedTouches[0].identifier
+    }
+
+    const MIN_DISTANCE = 30;
+    const X_DISTANCE = Math.abs(startTouch.x - endTouch.x);
+    const Y_DISTANCE = Math.abs(startTouch.y - endTouch.y);
+    if ((X_DISTANCE < MIN_DISTANCE && Y_DISTANCE < MIN_DISTANCE) ||
+         (Math.abs(X_DISTANCE - Y_DISTANCE) < MIN_DISTANCE * 0.7)) {
+            startTouch = undefined;
+            return;
+        }
+
+    let direction = '';
+    if (Math.abs(startTouch.x - endTouch.x) > 
+        Math.abs(startTouch.y - endTouch.y)) {
+            direction = 'left';
+            if (startTouch.x < endTouch.x) {
+                direction = 'right';
+            }
+    } else {
+        direction = 'up';
+        if (startTouch.y < endTouch.y) {
+            direction = 'down';
+        }
+    }
+    if (direction !== '') {
+        makeTurn(direction);
+    }
+}
+
+const handleTouchMoveEvent = event => {
+    event.preventDefault();
+}
+
+const handleTouchCancelEvent = event => {
+    event.preventDefault();
+    startTouch =- undefined;
 }
 
 let game2048 = game();
@@ -42,3 +112,9 @@ document.querySelector('.btn-newgame').addEventListener('click', e => {
     viewStartBoard(game2048.start());
     document.addEventListener('keydown', handleKeydownEvent);
 });
+
+let boardElement = document.querySelector('.board');
+boardElement.addEventListener('touchstart', handleTouchStartEvent, false);
+boardElement.addEventListener('touchend', handleTouchEndEvent, false);
+//boardElement.addEventListener('touchmove', handleTouchMoveEvent, false);
+boardElement.addEventListener('touchcancel', handleTouchCancelEvent, false);
