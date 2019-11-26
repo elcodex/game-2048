@@ -1,13 +1,11 @@
 {
-    "name": "game 2048",
+    "name": "game2048",
     "description": "",
     "version": "1.0.0",
     "author": "Elen",
     "license": "MIT",
-    "main": "game-2048.html",
 
     "scripts": {
-        "start": "game-2048.html",
         "test": "jest"
     },
     "dependencies": {
