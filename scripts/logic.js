@@ -1,8 +1,7 @@
-
-const game = (userBoard) => {
-    const probabilityOfTwo = 90;
+const game = userBoard => {
+    const PROBABILITY_OF_TWO = 90;
+    const WINNING_SCORE = 2048;
     const initialBoard = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
-    const winScore = 2048;
 
     let board = userBoard ? 
         userBoard.map(row => row.map(tile => tile)) : 
@@ -19,7 +18,7 @@ const game = (userBoard) => {
 
         if (emptyTiles.length > 0) {
             const tileNumber = Math.floor(Math.random() * emptyTiles.length);
-            if (Math.random() * 100 <= probabilityOfTwo)
+            if (Math.random() * 100 <= PROBABILITY_OF_TWO)
                 board[emptyTiles[tileNumber][0]][emptyTiles[tileNumber][1]] = 2;
             else
                 board[emptyTiles[tileNumber][0]][emptyTiles[tileNumber][1]] = 4;
@@ -33,109 +32,66 @@ const game = (userBoard) => {
     }
 
     const turn = direction => {
-        const move = (dx, dy) => {
-            let moveHorizontally = (dy) => {
+        const move = ({dx, dy}) => {
+            let makeMove = (dx, dy) => {
                 let isSomethingChanged = false;
-                let [from, to] = (dy === -1) ? 
-                    [0, board.length] : 
-                    [board.length - 1, -1];
-          
-                let newBoard = board.map(row => {
-                    let newRow = [];
-                    let lastTile = undefined;
-                    for (let j = from; j !== to; j += -dy) {
-                        const tile = row[j];
-                        if (tile !== 0) {
-                            if (lastTile && lastTile === tile) {
-                                lastTile *= 2;
-                                newRow.push(lastTile);
-                                isSomethingChanged = true;
-                                lastTile = undefined;
-                            } 
-                            else if (lastTile && lastTile !== tile) {
-                                newRow.push(lastTile);
-                                lastTile = tile;
-                            }
-                            else if (!lastTile) {
-                                lastTile = tile;
-                            }
-                        }
-                    }
-                    if (lastTile) {
-                        newRow.push(lastTile);
-                    }
-                    while (newRow.length < row.length) {
-                        newRow.push(0);
-                    }
-                    if (dy === 1) {
-                        newRow.reverse();
-                    }
-                    if (!isSomethingChanged) {
-                        isSomethingChanged = newRow.some((tile, i) => tile !== row[i]);
-                    }
                 
-                    return newRow;
-                });
-                return {newBoard, isSomethingChanged};
-            }
-            
-            const moveVertically = (dx) => {
-                let isSomethingChanged = false;
-                let [from, to] = (dx === -1) ? 
+                const d = (dx === 0) ? dy : dx;
+                let [from, to] = (d === -1) ? 
                     [0, board.length] : 
                     [board.length - 1, -1];
-                let newBoard = initialBoard.map(row => row.map(tile => tile));;
-                for (let j = 0; j < board.length; j++) {
-                    let newColumn = [];
+                
+                let newBoard = initialBoard.map(row => row.map(tile => tile));
+                
+                const length = (dx === 0) ? board[0].length : board.length;
+                for (let i = 0; i < length; i++) {
+                    let newLine = [];
                     let lastTile = undefined;
-                    for (let i = from; i !== to; i += -dx) {
-                        const tile = board[i][j];
+                    for (let j = from; j !== to; j += -d) {
+                        const tile = (dx === 0) ? board[i][j] : board[j][i];
                         if (tile !== 0) {
                             if (lastTile && lastTile === tile) {
-                                lastTile *= 2;
-                                newColumn.push(lastTile);
-                                isSomethingChanged = true;
-                                lastTile = undefined;
-                            } 
+                            lastTile *= 2;
+                            newLine.push(lastTile);
+                            isSomethingChanged = true;
+                            lastTile = undefined;
+                            }
                             else if (lastTile && lastTile !== tile) {
-                                newColumn.push(lastTile);
-                                lastTile = tile;
+                            newLine.push(lastTile);
+                            lastTile = tile;
                             }
                             else if (!lastTile) {
-                                lastTile = tile;
+                            lastTile = tile;
                             }
                         }
                     }
                     if (lastTile) {
-                        newColumn.push(lastTile);
+                        newLine.push(lastTile);
                     }
-                    while (newColumn.length < board.length) {
-                        newColumn.push(0);
+                    while (newLine.length < length) {
+                        newLine.push(0);
                     }
-                    if (dx === 1) {
-                        newColumn.reverse();
+                    if (d > 0) {
+                        newLine.reverse();
                     }
                     if (!isSomethingChanged) {
-                        isSomethingChanged = newColumn.some((tile, i) => tile !== board[i][j]); 
+                        isSomethingChanged = newLine.some((tile, index) => {
+                            const boardTile = (dx === 0) ? board[i][index] : board[index][i];
+                            return tile !== boardTile;
+                        });
                     }
-                    
-                    for (let i = 0; i < newColumn.length; i++) {
-                        newBoard[i][j] = newColumn[i];
-                    }
+                    newLine.forEach((tile, index) => {
+                        if (dx === 0) {
+                            newBoard[i][index] = tile;
+                        } else {
+                            newBoard[index][i] = tile;
+                        }
+                    });
                 }
                 return {newBoard, isSomethingChanged};
             }
-            
-            let results = {};
-            if (dx !== 0) {
-                results = moveVertically(dx);   
-            }
-            if (dy !== 0) {
-                results = moveHorizontally(dy);
-            }
+            const {newBoard, isSomethingChanged} = makeMove(dx, dy);
 
-            let isSomethingChanged = results.isSomethingChanged;
-            let newBoard = results.newBoard;
             if (isSomethingChanged) {
                 board = newBoard.map(row => row.map(tile => tile));
             }
@@ -143,20 +99,13 @@ const game = (userBoard) => {
             return isSomethingChanged;
         }
         
-        let isSomethingChanged = false;
-        if (direction === 'left') {
-            isSomethingChanged = move(0, -1);
+        const DIRECTIONS = {
+            'left': {dx: 0, dy: -1},
+            'right': {dx: 0, dy: 1},
+            'up': {dx: -1, dy: 0},
+            'down': {dx: 1, dy: 0}
         }
-        if (direction === 'right') {
-            isSomethingChanged = move(0, 1);
-        }
-        if (direction === 'up') {
-            isSomethingChanged = move(-1, 0);
-        }
-        if (direction === 'down') {
-            isSomethingChanged = move(1, 0);  
-        }
-
+        const isSomethingChanged = move(DIRECTIONS[direction]);
         if (isSomethingChanged) {
             setNewTile();
         }
@@ -178,8 +127,8 @@ const game = (userBoard) => {
         }
 
         const noEmptyTiles = board.every(row => row.every(tile => tile > 0));
-        const hasWinScore = board.some(row => row.includes(winScore));
-        return (noEmptyTiles && !doesTurnExist()) || hasWinScore;
+        const hasWinningScore = board.some(row => row.includes(WINNING_SCORE));
+        return (noEmptyTiles && !doesTurnExist()) || hasWinningScore;
     }
     
     const maxScore = () => {
@@ -196,4 +145,4 @@ const game = (userBoard) => {
     }
 }
 
-module.exports = game;
+module.exports = game; // for tests
