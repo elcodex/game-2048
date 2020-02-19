@@ -1,12 +1,13 @@
-**Game 2048**
+# Game 2048
 
-Demo page: https://elcodex.github.io/game-2048/game2048.html
+[Demo page]https://elcodex.github.io/game-2048/game2048.html
+
 Controls: touch swipe or WASD/arrow keys.
 
 An implementation of a game [2048](https://en.wikipedia.org/wiki/2048_(video_game)).
 This game is written in JavaScript and HTML+CSS.
 
-Implementation features:
+## Implementation features:
 - restart button,
 - no impossible turns: if there are no empty tiles or no tiles are combined in chosen direction than 
 new tile is not generated on the board (logic.js: game.turn), 
