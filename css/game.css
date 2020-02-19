@@ -15,6 +15,7 @@ html {
 body {
   --background-color: #394F67;
   background-color: var(--background-color);
+  color: #D7E1EC;
 }
 
 .container {
@@ -23,6 +24,21 @@ body {
   margin: 0.5rem auto;
   font-family: "PT Sans", "Segoe UI", "Verdana", "Helvetica", sans;
   color: #152639;
+}
+
+.links {
+  text-align: center;
+  font-size: .7rem;
+}
+.links > a:link,
+.links > a:hover,
+.links > a:active, 
+.links > a:visited {
+  color: #D7E1EC;
+}
+.links img {
+  width: 50px;
+  height: auto;
 }
 
 @media screen and (min-width: 550px) {
