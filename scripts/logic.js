@@ -51,17 +51,17 @@ const game = userBoard => {
                         const tile = (dx === 0) ? board[i][j] : board[j][i];
                         if (tile !== 0) {
                             if (lastTile && lastTile === tile) {
-                            lastTile *= 2;
-                            newLine.push(lastTile);
-                            isSomethingChanged = true;
-                            lastTile = undefined;
+                                lastTile *= 2;
+                                newLine.push(lastTile);
+                                isSomethingChanged = true;
+                                lastTile = undefined;
                             }
                             else if (lastTile && lastTile !== tile) {
-                            newLine.push(lastTile);
-                            lastTile = tile;
+                                newLine.push(lastTile);
+                                lastTile = tile;
                             }
                             else if (!lastTile) {
-                            lastTile = tile;
+                                lastTile = tile;
                             }
                         }
                     }
