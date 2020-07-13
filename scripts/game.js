@@ -1,8 +1,12 @@
 const makeTurn = direction => {
-    viewTurnBoard(game2048.turn(direction));
+    const board = game2048.turn(direction);
+    viewTurnBoard(board);
+    saveToLocalStorage(board);
+
     if (game2048.isOver()) {
         setTimeout(() => {
             viewGameOverBoard(game2048.maxScore());
+            clearLocalStorage();
             document.removeEventListener('keydown', handleKeydownEvent);
         }, 500);
     }
@@ -102,13 +106,20 @@ const handleTouchCancelEvent = event => {
     startTouch =- undefined;
 }
 
-let game2048 = game();
+let board = getFromLocalStorage();
+let game2048 = game(board);
 
-viewStartBoard(game2048.start());
+if (!board) {
+    board = game2048.start();
+}
+
+viewStartBoard(board);
+
 document.addEventListener('keydown', handleKeydownEvent);
 
 document.querySelector('.btn-newgame').addEventListener('click', e => {
     document.removeEventListener('keydown', handleKeydownEvent);
+    clearLocalStorage();
     viewStartBoard(game2048.start());
     document.addEventListener('keydown', handleKeydownEvent);
 });
