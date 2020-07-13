@@ -3,42 +3,46 @@
 @import "blocks/header.css";
 @import "blocks/nav.css";
 
+:root {
+  --background-color: #394F67;
+  --text-color: #D7E1EC;
+
+  --tile-text-color: #152639;
+}
+
 html, body {
-  max-height: 100%;
   margin: 0;
   padding: 0;
 }
 html {
   font-size: 6vmin;
+  height: 100%;
 } 
 
 body {
-  --background-color: #394F67;
   background-color: var(--background-color);
-  color: #D7E1EC;
+  color: var(--text-color);
+  max-height: 100%;
 }
 
 .container {
   --tile-size: calc(90vmin / 4 - 10px);
+
   width: calc(4 * var(--tile-size) + 10px * 3);
   margin: 0.5rem auto;
   font-family: "PT Sans", "Segoe UI", "Verdana", "Helvetica", sans;
-  color: #152639;
+  color: var(--tile-text-color);
 }
 
 .links {
   text-align: center;
-  font-size: .7rem;
+  font-size: .5rem;
 }
 .links > a:link,
 .links > a:hover,
 .links > a:active, 
 .links > a:visited {
-  color: #D7E1EC;
-}
-.links img {
-  width: 50px;
-  height: auto;
+  color: var(--text-color);
 }
 
 @media screen and (min-width: 550px) {
