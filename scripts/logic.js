@@ -9,12 +9,14 @@ function Game(userBoard) {
 }
 
 Game.prototype.setNewTile = function() {
-    const emptyTiles = board.reduce((tiles, row, i) => {
+    const emptyTiles = this.board.reduce((tiles, row, i) => {
         tiles.push(...row.reduce((rowTiles, tile, j) => {
             if (tile === 0) {
                 rowTiles.push([i, j]);
-            }    
+            }   
+            return rowTiles; 
         }, []));
+        return tiles;
     }, []);
 
     if (emptyTiles.length > 0) {
@@ -29,7 +31,7 @@ Game.prototype.setNewTile = function() {
 }
 
 Game.prototype.start = function() {  
-    ths.board = createNewBoard(INITIAL_BOARD);
+    this.board = createNewBoard(INITIAL_BOARD);
     this.setNewTile();
 }
 
@@ -43,7 +45,7 @@ Game.prototype.turn = function(direction) {
             let [from, to] = [0, this.board.length],
                 dj = 1;
 
-            if (direction === 'left' || direction === 'up') {
+            if (direction === 'right' || direction === 'down') {
                 [from, to] = [this.board.length - 1, -1];
                 dj = -1;
             }
@@ -91,12 +93,12 @@ Game.prototype.turn = function(direction) {
 
                 newLine.push(...new Array(Math.max(0, length - newLine.length)).fill(0));
 
-                if (direction === 'left' || direction === 'up') {
+                if (direction === 'right' || direction === 'down') {
                     newLine.reverse();
                 }
                 
                 newLine.forEach((tile, index) => {
-                    if (dx === 0) {
+                    if (direction === 'left' || direction === 'right') {
                         newBoard[i][index] = tile;
                     } else {
                         newBoard[index][i] = tile;
@@ -136,8 +138,8 @@ Game.prototype.isOver = function() {
 
     const hasEmptyTiles = this.board.some(row => row.some(tile => tile === 0));
     const hasWinningScore = this.board.some(row => row.includes(WINNING_SCORE));
-    
-    return !doesTurnExist() || hasWinningScore || !hasEmptyTiles;
+
+    return !(doesTurnExist() || hasEmptyTiles) || hasWinningScore;
 }
     
 Game.prototype.maxScore = function() {
