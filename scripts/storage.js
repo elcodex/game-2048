@@ -21,8 +21,8 @@ const getFromLocalStorage = () => {
         if (boardString) {
             return boardString
                 .split(ROW_SEPARATOR)
-                .map(row => row.split(TILE_SEPARATOR).map(tile => parseInt(tile)));
+                .map(row => row.split(TILE_SEPARATOR).map(tile => parseInt(tile, 10)));
         }
     }
-    return undefined;
+    return;
 }

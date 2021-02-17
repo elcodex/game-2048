@@ -1,7 +1,7 @@
 const makeTurn = direction => {
-    const board = game2048.turn(direction);
-    viewTurnBoard(board);
-    saveToLocalStorage(board);
+    game2048.turn(direction);
+    viewTurnBoard(game2048.board);
+    saveToLocalStorage(game2048.board);
 
     if (game2048.isOver()) {
         setTimeout(() => {
@@ -15,29 +15,25 @@ const makeTurn = direction => {
 const handleKeydownEvent = event => {
     let direction = '';
     if (event.code === 'ArrowDown'  || event.code === 'KeyS') {
-        //console.log('down');
         direction = 'down';
     }
-    if (event.code === 'ArrowLeft'  || event.code === 'KeyA') {
-        //console.log('left');
+    else if (event.code === 'ArrowLeft'  || event.code === 'KeyA') {
         direction = 'left';
     }
-    if (event.code === 'ArrowUp'    || event.code === 'KeyW') {
-        //console.log('up');
+    else if (event.code === 'ArrowUp'    || event.code === 'KeyW') {
         direction = 'up';
     }
-    if (event.code === 'ArrowRight' || event.code === 'KeyD') {
-        //console.log('right');
+    else if (event.code === 'ArrowRight' || event.code === 'KeyD') {
         direction = 'right';
     }
     
-    if (direction !== '') {
+    if (direction) {
         event.preventDefault();
         makeTurn(direction);
     }
 }
 
-let startTouch = undefined;
+let startTouch = null;
 const handleTouchStartEvent = event => {
     event.preventDefault();
 
@@ -60,7 +56,7 @@ const handleTouchEndEvent = event => {
     }
     if (event.changedTouches.length > 1 ||
         startTouch.id !== event.changedTouches[0].identifier) {
-            startTouch = undefined;
+            startTouch = null;
             return;
     }
     
@@ -70,18 +66,16 @@ const handleTouchEndEvent = event => {
         id: event.changedTouches[0].identifier
     }
 
-    const MIN_DISTANCE = 30;
-    const X_DISTANCE = Math.abs(startTouch.x - endTouch.x);
-    const Y_DISTANCE = Math.abs(startTouch.y - endTouch.y);
-    if ((X_DISTANCE < MIN_DISTANCE && Y_DISTANCE < MIN_DISTANCE) ||
-         (Math.abs(X_DISTANCE - Y_DISTANCE) < MIN_DISTANCE * 0.7)) {
-            startTouch = undefined;
-            return;
-        }
+    const THRESHOLD = 30;
+    const IS_X_THRESHOLD = Math.abs(startTouch.x - endTouch.x) < THRESHOLD;
+    const IS_Y_THRESHOLD = Math.abs(startTouch.y - endTouch.y) < THRESHOLD;
+    if (IS_X_THRESHOLD && IS_Y_THRESHOLD) {
+        startTouch = null;
+        return;
+    }
 
     let direction = '';
-    if (Math.abs(startTouch.x - endTouch.x) > 
-        Math.abs(startTouch.y - endTouch.y)) {
+    if (IS_Y_THRESHOLD) {
             direction = 'left';
             if (startTouch.x < endTouch.x) {
                 direction = 'right';
@@ -92,7 +86,7 @@ const handleTouchEndEvent = event => {
             direction = 'down';
         }
     }
-    if (direction !== '') {
+    if (direction) {
         makeTurn(direction);
     }
 }
@@ -103,29 +97,28 @@ const handleTouchMoveEvent = event => {
 
 const handleTouchCancelEvent = event => {
     event.preventDefault();
-    startTouch =- undefined;
+    startTouch = null;
 }
 
-let board = getFromLocalStorage();
-let game2048 = game(board);
+const board = getFromLocalStorage();
+let game2048 = new Game(board);
 
-if (!board) {
-    board = game2048.start();
-}
+game2048.start();
 
-viewStartBoard(board);
+viewStartBoard(game2048.board);
 
 document.addEventListener('keydown', handleKeydownEvent);
 
 document.querySelector('.btn-newgame').addEventListener('click', e => {
     document.removeEventListener('keydown', handleKeydownEvent);
     clearLocalStorage();
-    viewStartBoard(game2048.start());
+    game2048 = new Game();
+    game2048.start()
+    viewStartBoard(game2048.board);
     document.addEventListener('keydown', handleKeydownEvent);
 });
 
 let boardElement = document.querySelector('.board');
 boardElement.addEventListener('touchstart', handleTouchStartEvent, false);
 boardElement.addEventListener('touchend', handleTouchEndEvent, false);
-//boardElement.addEventListener('touchmove', handleTouchMoveEvent, false);
 boardElement.addEventListener('touchcancel', handleTouchCancelEvent, false);
