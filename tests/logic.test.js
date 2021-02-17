@@ -1,89 +1,104 @@
-const game = require('../scripts/logic.js');
+const Game = require('../scripts/logic.js');
 
 describe("start game tests", () => {
     test("start game contains only one value", () => {
-        const board = game().start();
-        let valuesCount = 0;    
-        board.forEach(row => row.forEach(tile => {
-            if (tile > 0) valuesCount++;
-        }));
+        const testGame = new Game();
+        testGame.start();
+        const valuesCount = testGame.board
+            .reduce((count, row) => 
+                count + row.reduce((rowCount, tile) =>
+                    (tile > 0) ? rowCount + 1 : rowCount
+                , 0)
+            , 0);
         expect(valuesCount).toBe(1);
     });
 
     test("start game contains value 2 or 4", () => {
-        const board = game().start();
-        let contains = board.some(row => 
-            row.some(tile => tile === 2 || tile ===4));
+        const testGame = new Game();
+        testGame.start();
+        const contains = testGame.board.some(row => 
+            row.some(tile => tile === 2 || tile === 4
+        ));
         expect(contains).toBeTruthy();
     });
 });
 
 describe("first move tests", () => {
     test("move to the left direction", () => {
-        let testGame = game();
-        const startBoard = testGame.start();
-        const movedBoard = testGame.turn('left');
+        let testGame = new Game();
+        testGame.start();
+        console.log(testGame.board);
 
-        let rowIndex = startBoard.findIndex(row => 
-            row.includes(2) || row.includes(4));
+        const rowIndex = testGame.board.findIndex(row => 
+            row.includes(2) || row.includes(4)
+        );
+
+        testGame.turn('left');
+        console.log(testGame.board);
         
-        expect(movedBoard[rowIndex][0] > 0).toBeTruthy();
+        expect(testGame.board[rowIndex][0] > 0).toBeTruthy();
     });
 
     test("move to the right direction", () => {
-        let testGame = game();
-        const startBoard = testGame.start();
-        const movedBoard = testGame.turn('right');
+        let testGame = new Game();
+        testGame.start();
 
-        let rowIndex = startBoard.findIndex(row => 
-            row.includes(2) || row.includes(4));
+        const rowIndex = testGame.board.findIndex(row => 
+            row.includes(2) || row.includes(4)
+        );
         
-        expect(movedBoard[rowIndex][movedBoard[rowIndex].length-1] > 0)
+        testGame.turn('right');
+        
+        expect(testGame.board[rowIndex][testGame.board[rowIndex].length-1] > 0)
             .toBeTruthy();
     });
 
     test("move to the up direction", () => {
-        let testGame = game();
-        const startBoard = testGame.start();
-        const movedBoard = testGame.turn('up');
-
-        let columnIndex = undefined;
-        for (let i = 0; i < startBoard.length && !columnIndex; i++) {
-            for (let j = 0; j < startBoard[i].length && !columnIndex; j++) {
-                if (startBoard[i][j] > 0) {
+        let testGame = new Game();
+        
+        testGame.start();
+        
+        let columnIndex;
+        for (let i = 0; i < testGame.board.length && !columnIndex; i++) {
+            for (let j = 0; j < testGame.board[i].length && !columnIndex; j++) {
+                if (testGame.board[i][j] > 0) {
                     columnIndex = j;
                 }
             }
         }
 
-        expect(movedBoard[0][columnIndex] > 0).toBeTruthy();
+        testGame.turn('up');
+
+        expect(testGame.board[0][columnIndex] > 0).toBeTruthy();
     });
 
     test("move to the down direction", () => {
-        let testGame = game();
-        const startBoard = testGame.start();
-        const movedBoard = testGame.turn('down');
-
-        let columnIndex = undefined;
-        for (let i = 0; i < startBoard.length && !columnIndex; i++) {
-            for (let j = 0; j < startBoard[i].length && !columnIndex; j++) {
-                if (startBoard[i][j] > 0) {
+        let testGame = new Game();
+        testGame.start();
+        let columnIndex;
+        for (let i = 0; i < testGame.board.length && !columnIndex; i++) {
+            for (let j = 0; j < testGame.board[i].length && !columnIndex; j++) {
+                if (testGame.board[i][j] > 0) {
                     columnIndex = j;
                 }
             }
         }
         
-        expect(movedBoard[movedBoard.length-1][columnIndex] > 0).toBeTruthy();
+        testGame.turn('down');
+        
+        expect(testGame.board[testGame.board.length-1][columnIndex] > 0).toBeTruthy();
     });
+    
 });
 
 describe("some turns tests", () => {
     test("game is not over after some turns", () => {
         const SOME_TURNS = 5;
-        let testGame = game();
-        let directions = ['left', 'up', 'right', 'down'];
+        let testGame = new Game();
+        
+        const directions = ['left', 'up', 'right', 'down'];
         for (let turnNumber = 0; turnNumber < SOME_TURNS; turnNumber++) {
-            testGame.turn(directions[Math.floor(Math.random()*directions.length)]);
+            testGame.turn(directions[Math.floor(Math.random() * directions.length)]);
         }
         
         expect(testGame.isOver()).toBeFalsy();
@@ -91,15 +106,15 @@ describe("some turns tests", () => {
 
     test("game max score is correct after some turns", () => {
         const SOME_TURNS = 5;
-        let testGame = game();
+        let testGame = new Game();
         let directions = ['left', 'up', 'right', 'down'];
-        let board = [];
+        
         for (let turnNumber = 0; turnNumber < SOME_TURNS; turnNumber++) {
-            board = testGame.turn(directions[Math.floor(Math.random()*directions.length)]);
+            testGame.turn(directions[Math.floor(Math.random() * directions.length)]);
         }
 
         let maxScore = 0;
-        board.forEach(row => row.forEach(tile => {
+        testGame.board.forEach(row => row.forEach(tile => {
             if (tile > maxScore)
                 maxScore = tile;
         }));
@@ -109,25 +124,24 @@ describe("some turns tests", () => {
 });
 
 describe("custom board tests", () => {
-    let notEmptyValuesCount = board => 
+    const notEmptyValuesCount = board => 
         board.reduce((count, row) => 
-            count + row.reduce((rowCount, tile) => {
-            if (tile > 0)
-                return rowCount + 1;
-            return rowCount;     
-            }, 0), 
+            count + row.reduce((rowCount, tile) =>
+                (tile > 0) ? rowCount + 1 : rowCount     
+            , 0), 
         0); 
 
-    let executeTest = (beforeBoard, afterBoard, direction) => {
-        let testGame = game(beforeBoard);
-        const turnBoard = testGame.turn(direction);
+    const executeTest = (beforeBoard, afterBoard, direction) => {
+        let testGame = new Game(beforeBoard);
+        testGame.turn(direction);
 
-        const isMovedCorrect = turnBoard.every((row, i) => 
+        const isMovedCorrect = testGame.board.every((row, i) => 
             row.every((tile, j) => 
                 (afterBoard[i][j] !== 0 && tile === afterBoard[i][j]) ||
                 (afterBoard[i][j] === 0)
             ));
-        const valuesCount = notEmptyValuesCount(turnBoard);
+
+        const valuesCount = notEmptyValuesCount(testGame.board);
 
         return {isMovedCorrect, valuesCount}
     } 
@@ -218,17 +232,17 @@ describe('End game tests', () => {
             [2, 4, 2, 4]
         ];
 
-        expect(game(BOARD).isOver()).toBe(false);
+        expect(new Game(BOARD).isOver()).toBe(false);
     });
 
-    test('Game is not over. Board has tiles to be merged', () => {
+    test('Game is not over. Board has tiles to be merged, but no empty tiles', () => {
         const BOARD = [
             [2, 8, 2, 8],
             [32, 2, 8, 32],
             [2, 4, 2, 32],
             [8, 2, 8, 2]
         ];
-        expect(game(BOARD).isOver()).toBe(false);
+        expect(new Game(BOARD).isOver()).toBe(false);
     });
 
     test('Game is over. There are no more empty tiles and no merge', () => {
@@ -238,7 +252,7 @@ describe('End game tests', () => {
             [8, 2, 4, 64],
             [16, 8, 2, 4]
         ];
-        expect(game(BOARD).isOver()).toBe(true);
+        expect(new Game(BOARD).isOver()).toBe(true);
     });
 
     test('Game is over. Max value tile is 2048', () => {
@@ -248,6 +262,7 @@ describe('End game tests', () => {
             [256, 64, 16, 0],
             [256, 0, 16, 0]
         ];
-        expect(game(BOARD).isOver()).toBe(true);
+        expect(new Game(BOARD).isOver()).toBe(true);
     })
+    
 });
