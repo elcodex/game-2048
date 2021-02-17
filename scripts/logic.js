@@ -123,20 +123,21 @@ Game.prototype.turn = function(direction) {
 Game.prototype.isOver = function() {
     const doesTurnExist = () => {
         return this.board.some((row, i) => row.some((tile, j) => {
-            return [{di: 0, dj: -1}, {di: -1, dj: 0}, 
-                {di: 0, dj: 1}, {di: 1, dj: 0}].some(({di, dj}) => {
-                if (i + di >= 0 && i + di < this.board.length &&
-                    j + dj >= 0 && j + dj < row.length) {
-                        return tile === this.board[i+di][j+dj];
-                }
-                return false;
-            });
+            return [{di: 0, dj: -1}, {di: -1, dj: 0}, {di: 0, dj: 1}, {di: 1, dj: 0}]
+                .some(({di, dj}) => {
+                    if (i + di >= 0 && i + di < this.board.length &&
+                        j + dj >= 0 && j + dj < row.length) {
+                            return tile === this.board[i+di][j+dj];
+                    }
+                    return false;
+                });
         }));
     }
 
-    const noEmptyTiles = this.board.every(row => row.every(tile => tile > 0));
+    const hasEmptyTiles = this.board.some(row => row.some(tile => tile === 0));
     const hasWinningScore = this.board.some(row => row.includes(WINNING_SCORE));
-    return (noEmptyTiles && !doesTurnExist()) || hasWinningScore;
+    
+    return !doesTurnExist() || hasWinningScore || !hasEmptyTiles;
 }
     
 Game.prototype.maxScore = function() {
