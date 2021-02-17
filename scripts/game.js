@@ -15,16 +15,16 @@ const makeTurn = direction => {
 const handleKeydownEvent = event => {
     let direction = '';
     if (event.code === 'ArrowDown'  || event.code === 'KeyS') {
-        direction = 'down';
+        direction = DIRECTIONS.DOWN;
     }
     else if (event.code === 'ArrowLeft'  || event.code === 'KeyA') {
-        direction = 'left';
+        direction = DIRECTIONS.LEFT;
     }
     else if (event.code === 'ArrowUp'    || event.code === 'KeyW') {
-        direction = 'up';
+        direction = DIRECTIONS.UP;
     }
     else if (event.code === 'ArrowRight' || event.code === 'KeyD') {
-        direction = 'right';
+        direction = DIRECTIONS.RIGHT;
     }
     
     if (direction) {
@@ -76,14 +76,14 @@ const handleTouchEndEvent = event => {
 
     let direction = '';
     if (IS_Y_THRESHOLD) {
-            direction = 'left';
+            direction = DIRECTIONS.LEFT;
             if (startTouch.x < endTouch.x) {
-                direction = 'right';
+                direction = DIRECTIONS.RIGHT;
             }
     } else {
-        direction = 'up';
+        direction = DIRECTIONS.UP;
         if (startTouch.y < endTouch.y) {
-            direction = 'down';
+            direction = DIRECTIONS.DOWN;
         }
     }
     if (direction) {

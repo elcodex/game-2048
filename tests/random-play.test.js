@@ -1,12 +1,15 @@
+const config = require('../scripts/config.js');
 const Game = require('../scripts/logic.js');
+
+const DIRECTIONS = config.DIRECTIONS;
 
 describe('play the game', () => {
     const randomGameTest = () => {
-        const DIRECTIONS = ['left', 'right', 'up', 'down'];
+        const directions = [DIRECTIONS.LEFT, DIRECTIONS.UP, DIRECTIONS.RIGHT, DIRECTIONS.DOWN];
         let randomGame = new Game();
         randomGame.start();
         while (!randomGame.isOver()) {
-            const direction = DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)];
+            const direction = directions[Math.floor(Math.random() * directions.length)];
             randomGame.turn(direction);
         }
         

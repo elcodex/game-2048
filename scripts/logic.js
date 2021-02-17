@@ -1,3 +1,5 @@
+const DIRECTIONS = require('../scripts/config.js').DIRECTIONS;
+
 const INITIAL_BOARD = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 const PROBABILITY_OF_TWO = 90;
 const WINNING_SCORE = 2048;
@@ -45,7 +47,7 @@ Game.prototype.turn = function(direction) {
             let [from, to] = [0, this.board.length],
                 dj = 1;
 
-            if (direction === 'right' || direction === 'down') {
+            if (direction === DIRECTIONS.RIGHT || direction === DIRECTIONS.DOWN) {
                 [from, to] = [this.board.length - 1, -1];
                 dj = -1;
             }
@@ -59,7 +61,7 @@ Game.prototype.turn = function(direction) {
                 let newLine = [];
                 let lastTile = null;
                 for (let j = from; j !== to; j += dj) {
-                    const tile = (direction === 'left' || direction === 'right')
+                    const tile = (direction === DIRECTIONS.LEFT || direction === DIRECTIONS.RIGHT)
                         ? this.board[i][j] 
                         : this.board[j][i];
 
@@ -93,12 +95,12 @@ Game.prototype.turn = function(direction) {
 
                 newLine.push(...new Array(Math.max(0, length - newLine.length)).fill(0));
 
-                if (direction === 'right' || direction === 'down') {
+                if (direction === DIRECTIONS.RIGHT || direction === DIRECTIONS.DOWN) {
                     newLine.reverse();
                 }
                 
                 newLine.forEach((tile, index) => {
-                    if (direction === 'left' || direction === 'right') {
+                    if (direction === DIRECTIONS.LEFT || direction === DIRECTIONS.RIGHT) {
                         newBoard[i][index] = tile;
                     } else {
                         newBoard[index][i] = tile;

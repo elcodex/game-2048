@@ -1,4 +1,7 @@
+const config = require('../scripts/config.js');
 const Game = require('../scripts/logic.js');
+
+const DIRECTIONS = config.DIRECTIONS;
 
 describe("start game tests", () => {
     test("start game contains only one value", () => {
@@ -27,14 +30,12 @@ describe("first move tests", () => {
     test("move to the left direction", () => {
         let testGame = new Game();
         testGame.start();
-        console.log(testGame.board);
 
         const rowIndex = testGame.board.findIndex(row => 
             row.includes(2) || row.includes(4)
         );
 
-        testGame.turn('left');
-        console.log(testGame.board);
+        testGame.turn(DIRECTIONS.LEFT);
         
         expect(testGame.board[rowIndex][0] > 0).toBeTruthy();
     });
@@ -47,7 +48,7 @@ describe("first move tests", () => {
             row.includes(2) || row.includes(4)
         );
         
-        testGame.turn('right');
+        testGame.turn(DIRECTIONS.RIGHT);
         
         expect(testGame.board[rowIndex][testGame.board[rowIndex].length-1] > 0)
             .toBeTruthy();
@@ -67,7 +68,7 @@ describe("first move tests", () => {
             }
         }
 
-        testGame.turn('up');
+        testGame.turn(DIRECTIONS.UP);
 
         expect(testGame.board[0][columnIndex] > 0).toBeTruthy();
     });
@@ -84,7 +85,7 @@ describe("first move tests", () => {
             }
         }
         
-        testGame.turn('down');
+        testGame.turn(DIRECTIONS.DOWN);
         
         expect(testGame.board[testGame.board.length-1][columnIndex] > 0).toBeTruthy();
     });
@@ -96,7 +97,7 @@ describe("some turns tests", () => {
         const SOME_TURNS = 5;
         let testGame = new Game();
         
-        const directions = ['left', 'up', 'right', 'down'];
+        const directions = [[DIRECTIONS.LEFT, DIRECTIONS.UP, DIRECTIONS.RIGHT, DIRECTIONS.DOWN]];
         for (let turnNumber = 0; turnNumber < SOME_TURNS; turnNumber++) {
             testGame.turn(directions[Math.floor(Math.random() * directions.length)]);
         }
@@ -107,7 +108,7 @@ describe("some turns tests", () => {
     test("game max score is correct after some turns", () => {
         const SOME_TURNS = 5;
         let testGame = new Game();
-        let directions = ['left', 'up', 'right', 'down'];
+        let directions = [DIRECTIONS.LEFT, DIRECTIONS.UP, DIRECTIONS.RIGHT, DIRECTIONS.DOWN];
         
         for (let turnNumber = 0; turnNumber < SOME_TURNS; turnNumber++) {
             testGame.turn(directions[Math.floor(Math.random() * directions.length)]);
@@ -159,7 +160,7 @@ describe("custom board tests", () => {
             [2, 0, 0, 0],
             [16, 0, 0, 0]
         ];
-        const {isMovedCorrect, valuesCount} = executeTest(BEFORE_BOARD, AFTER_BOARD, 'left');
+        const {isMovedCorrect, valuesCount} = executeTest(BEFORE_BOARD, AFTER_BOARD, DIRECTIONS.LEFT);
 
         expect(isMovedCorrect).toBe(true);
         expect(valuesCount).toBe(notEmptyValuesCount(AFTER_BOARD) + 1);
@@ -178,7 +179,7 @@ describe("custom board tests", () => {
             [0, 0, 0, 2],
             [0, 0, 0, 16]
         ];
-        const {isMovedCorrect, valuesCount} = executeTest(BEFORE_BOARD, AFTER_BOARD, 'right');
+        const {isMovedCorrect, valuesCount} = executeTest(BEFORE_BOARD, AFTER_BOARD, DIRECTIONS.RIGHT);
 
         expect(isMovedCorrect).toBe(true);
         expect(valuesCount).toBe(notEmptyValuesCount(AFTER_BOARD) + 1);
@@ -197,7 +198,7 @@ describe("custom board tests", () => {
             [8, 0, 0, 0],
             [0, 0, 0, 0]
         ];
-        const {isMovedCorrect, valuesCount} = executeTest(BEFORE_BOARD, AFTER_BOARD, 'up');
+        const {isMovedCorrect, valuesCount} = executeTest(BEFORE_BOARD, AFTER_BOARD, DIRECTIONS.UP);
 
         expect(isMovedCorrect).toBe(true);
         expect(valuesCount).toBe(notEmptyValuesCount(AFTER_BOARD) + 1);
@@ -216,7 +217,7 @@ describe("custom board tests", () => {
             [4, 0, 8, 8],
             [8, 8, 2, 8]
         ];
-        const {isMovedCorrect, valuesCount} = executeTest(BEFORE_BOARD, AFTER_BOARD, 'down');
+        const {isMovedCorrect, valuesCount} = executeTest(BEFORE_BOARD, AFTER_BOARD, DIRECTIONS.DOWN);
 
         expect(isMovedCorrect).toBe(true);
         expect(valuesCount).toBe(notEmptyValuesCount(AFTER_BOARD) + 1);
