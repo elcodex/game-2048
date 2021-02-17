@@ -1,9 +1,8 @@
 const INITIAL_BOARD = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+const PROBABILITY_OF_TWO = 90;
+const WINNING_SCORE = 2048;
 
 function Game(userBoard) {
-    const PROBABILITY_OF_TWO = 90;
-    const WINNING_SCORE = 2048;
-
     this.board = userBoard
         ? createNewBoard(userBoard)
         : createNewBoard(INITIAL_BOARD);
@@ -35,57 +34,67 @@ Game.prototype.start = function() {
 }
 
 Game.prototype.turn = function(direction) {
-    
-    const move = ({dx, dy}) => {
+
+    const move = () => {
         
-        let makeMove = (dx, dy) => {
+        const makeMove = () => {
             let isSomethingChanged = false;
             
-            const d = (dx === 0) ? dy : dx;
-            let [from, to] = (d === -1) ? 
-                [0, this.board.length] : 
-                [this.board.length - 1, -1];
+            let [from, to] = [0, this.board.length],
+                dj = 1;
+
+            if (direction === 'left' || direction === 'up') {
+                [from, to] = [this.board.length - 1, -1];
+                dj = -1;
+            }
             
             let newBoard = createNewBoard(INITIAL_BOARD);
             
-            const length = (dx === 0) ? this.board[0].length : this.board.length;
+            const length = this.board.length;
 
             for (let i = 0; i < length; i++) {
+                // create new row or column with the direction's shift
                 let newLine = [];
                 let lastTile = null;
-                for (let j = from; j !== to; j += -d) {
-                    const tile = (dx === 0) ? this.board[i][j] : this.board[j][i];
+                for (let j = from; j !== to; j += dj) {
+                    const tile = (direction === 'left' || direction === 'right')
+                        ? this.board[i][j] 
+                        : this.board[j][i];
+
                     if (tile !== 0) {
-                        if (lastTile && lastTile === tile) {
-                            lastTile *= 2;
-                            newLine.push(lastTile);
-                            isSomethingChanged = true;
-                            lastTile = null;
+                        if (lastTile) {
+                            if (lastTile === tile) {
+                                newLine.push(lastTile * 2);
+                                isSomethingChanged = true;
+                                lastTile = null;
+                            }
+                            else {
+                                newLine.push(lastTile);
+                                if (j !== newLine.length) {
+                                    isSomethingChanged = true;
+                                }
+                                lastTile = tile;
+                            }
                         }
-                        else if (lastTile && lastTile !== tile) {
-                            newLine.push(lastTile);
-                            lastTile = tile;
-                        }
-                        else if (!lastTile) {
+                        else {
                             lastTile = tile;
                         }
                     }
                 }
+
                 if (lastTile) {
                     newLine.push(lastTile);
+                    if (length !== newLine.length) {
+                        isSomethingChanged = true;
+                    }
                 }
-                while (newLine.length < length) {
-                    newLine.push(0);
-                }
-                if (d > 0) {
+
+                newLine.push(...new Array(Math.max(0, length - newLine.length)).fill(0));
+
+                if (direction === 'left' || direction === 'up') {
                     newLine.reverse();
                 }
-                if (!isSomethingChanged) {
-                    isSomethingChanged = newLine.some((tile, index) => {
-                        const boardTile = (dx === 0) ? board[i][index] : board[index][i];
-                        return tile !== boardTile;
-                    });
-                }
+                
                 newLine.forEach((tile, index) => {
                     if (dx === 0) {
                         newBoard[i][index] = tile;
@@ -96,7 +105,8 @@ Game.prototype.turn = function(direction) {
             }
             return {newBoard, isSomethingChanged};
         }
-        const {newBoard, isSomethingChanged} = makeMove(dx, dy);
+
+        const {newBoard, isSomethingChanged} = makeMove();
 
         if (isSomethingChanged) {
             this.board = createNewBoard(newBoard);
@@ -104,16 +114,8 @@ Game.prototype.turn = function(direction) {
 
         return isSomethingChanged;
     }
-    
-    const DIRECTIONS = {
-        'left': {dx: 0, dy: -1},
-        'right': {dx: 0, dy: 1},
-        'up': {dx: -1, dy: 0},
-        'down': {dx: 1, dy: 0}
-    }
 
-    const isSomethingChanged = move(DIRECTIONS[direction]);
-    if (isSomethingChanged) {
+    if (move()) {
         this.setNewTile();
     }
 }
