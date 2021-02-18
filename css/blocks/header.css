@@ -3,9 +3,12 @@ header {
 }
 
 .logo {
-    color: #D7E1EC;
-    font-family: 'Parisienne', cursive;
-    font-size: 0.8rem;;
+    color: var(--text-color);
+    font-size: 0.8rem;
+    width: var(--tile-size);
+    background-color: #C00305;
+    padding: 10px 0;
+    text-align: center;
 
     -webkit-touch-callout: none;
     -webkit-user-select: none; 
