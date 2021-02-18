@@ -102,8 +102,9 @@ const handleTouchCancelEvent = event => {
 
 const board = getFromLocalStorage();
 let game2048 = new Game(board);
-
-game2048.start();
+if (!board) {
+    game2048.start();
+}
 
 viewStartBoard(game2048.board);
 
