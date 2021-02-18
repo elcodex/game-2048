@@ -1,4 +1,4 @@
-const DIRECTIONS = require('../scripts/config.js').DIRECTIONS;
+//const DIRECTIONS = require('../scripts/config.js').DIRECTIONS;
 
 const INITIAL_BOARD = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
 const PROBABILITY_OF_TWO = 90;
@@ -74,9 +74,6 @@ Game.prototype.turn = function(direction) {
                             }
                             else {
                                 newLine.push(lastTile);
-                                if (j !== newLine.length) {
-                                    isSomethingChanged = true;
-                                }
                                 lastTile = tile;
                             }
                         }
@@ -88,15 +85,22 @@ Game.prototype.turn = function(direction) {
 
                 if (lastTile) {
                     newLine.push(lastTile);
-                    if (length !== newLine.length) {
-                        isSomethingChanged = true;
-                    }
                 }
 
                 newLine.push(...new Array(Math.max(0, length - newLine.length)).fill(0));
 
                 if (direction === DIRECTIONS.RIGHT || direction === DIRECTIONS.DOWN) {
                     newLine.reverse();
+                }
+
+                if (!isSomethingChanged) {
+                    isSomethingChanged = newLine.some((tile, index) => {
+                        let boardTile = this.board[index][i];
+                        if (direction === DIRECTIONS.LEFT || direction === DIRECTIONS.RIGHT) {
+                            boardTile = this.board[i][index];
+                        }   
+                        return tile !== boardTile;
+                    });
                 }
                 
                 newLine.forEach((tile, index) => {

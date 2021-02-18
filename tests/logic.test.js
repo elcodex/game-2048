@@ -222,6 +222,63 @@ describe("custom board tests", () => {
         expect(isMovedCorrect).toBe(true);
         expect(valuesCount).toBe(notEmptyValuesCount(AFTER_BOARD) + 1);
     });
+
+
+    test('Move UP is not legal', () => {
+        const BOARD = [
+            [2,0,0,0],
+            [4,0,0,0],
+            [0,0,0,0],
+            [0,0,0,0]
+        ];
+        
+        const {isMovedCorrect, valuesCount} = executeTest(BOARD, BOARD, DIRECTIONS.UP);
+
+        expect(isMovedCorrect).toBe(true);
+        expect(valuesCount).toBe(notEmptyValuesCount(BOARD));
+    });
+
+    test('Move RIGHT is not legal', () => {
+        const BOARD = [
+            [0,0,0,0],
+            [0,0,4,2],
+            [0,0,0,0],
+            [0,0,0,8]
+        ];
+        
+        const {isMovedCorrect, valuesCount} = executeTest(BOARD, BOARD, DIRECTIONS.RIGHT);
+
+        expect(isMovedCorrect).toBe(true);
+        expect(valuesCount).toBe(notEmptyValuesCount(BOARD));
+    });
+
+    test('Move DOWN is not legal', () => {
+        const BOARD = [
+            [2,0,0,0],
+            [4,0,0,0],
+            [8,0,0,0],
+            [16,0,2,0]
+        ];
+        
+        const {isMovedCorrect, valuesCount} = executeTest(BOARD, BOARD, DIRECTIONS.DOWN);
+
+        expect(isMovedCorrect).toBe(true);
+        expect(valuesCount).toBe(notEmptyValuesCount(BOARD));
+    });
+
+    test('Move LEFT is not legal', () => {
+        const BOARD = [
+            [2,0,0,0],
+            [4,8,0,0],
+            [0,0,0,0],
+            [0,0,0,0]
+        ];
+        
+        const {isMovedCorrect, valuesCount} = executeTest(BOARD, BOARD, DIRECTIONS.LEFT);
+
+        expect(isMovedCorrect).toBe(true);
+        expect(valuesCount).toBe(notEmptyValuesCount(BOARD));
+    });
 });
 
 describe('End game tests', () => {
