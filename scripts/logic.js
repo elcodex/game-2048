@@ -6,8 +6,8 @@ const WINNING_SCORE = 2048;
 
 function Game(userBoard) {
     this.board = userBoard
-        ? createNewBoard(userBoard)
-        : createNewBoard(INITIAL_BOARD);
+        ? copyBoard(userBoard)
+        : copyBoard(INITIAL_BOARD);
 }
 
 Game.prototype.setNewTile = function() {
@@ -33,7 +33,7 @@ Game.prototype.setNewTile = function() {
 }
 
 Game.prototype.start = function() {
-    this.board = createNewBoard(INITIAL_BOARD);
+    this.board = copyBoard(INITIAL_BOARD);
     this.setNewTile();
 }
 
@@ -43,7 +43,7 @@ Game.prototype.turn = function(direction) {
     const needToReverse = direction === DIRECTIONS.RIGHT || direction === DIRECTIONS.DOWN;
 
     function transposeBoard(board) {
-        let transposedBoard = createNewBoard(board);
+        let transposedBoard = copyBoard(board);
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board.length; j++) {
                 transposedBoard[i][j] = board[j][i];
@@ -55,7 +55,7 @@ Game.prototype.turn = function(direction) {
 
     let board = needToTranspose 
         ? transposeBoard(this.board) 
-        : createNewBoard(this.board);
+        : copyBoard(this.board);
 
     const shiftedRows = board.reduce((shifted, row) => {
         shifted.push(row.filter(n => n !== 0));
@@ -87,7 +87,7 @@ Game.prototype.turn = function(direction) {
 
     board = needToTranspose 
         ? transposeBoard(mergedBoard) 
-        : createNewBoard(mergedBoard);
+        : copyBoard(mergedBoard);
     
     const isSomethingChanged = board.some((row, i) =>
         row.some((n, j) => n !== this.board[i][j])
@@ -124,7 +124,7 @@ Game.prototype.maxScore = function() {
     return this.board.reduce((maxScore, row) => Math.max(maxScore, ...row), 0);
 }
 
-function createNewBoard(board) {
+function copyBoard(board) {
     return board.map(row => [...row]);
 }
 
