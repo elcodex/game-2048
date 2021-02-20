@@ -32,98 +32,70 @@ Game.prototype.setNewTile = function() {
     }
 }
 
-Game.prototype.start = function() {  
+Game.prototype.start = function() {
     this.board = createNewBoard(INITIAL_BOARD);
     this.setNewTile();
 }
 
 Game.prototype.turn = function(direction) {
 
-    const move = () => {
-        
-        const makeMove = () => {
-            let isSomethingChanged = false;
-            
-            let [from, to] = [0, this.board.length],
-                dj = 1;
+    const needToTranspose = direction === DIRECTIONS.UP || direction === DIRECTIONS.DOWN;
+    const needToReverse = direction === DIRECTIONS.RIGHT || direction === DIRECTIONS.DOWN;
 
-            if (direction === DIRECTIONS.RIGHT || direction === DIRECTIONS.DOWN) {
-                [from, to] = [this.board.length - 1, -1];
-                dj = -1;
+    function transposeBoard(board) {
+        let transposedBoard = createNewBoard(board);
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board.length; j++) {
+                transposedBoard[i][j] = board[j][i];
             }
-            
-            let newBoard = createNewBoard(INITIAL_BOARD);
-            
-            const length = this.board.length;
-
-            for (let i = 0; i < length; i++) {
-                // create new row or column with the direction's shift
-                let newLine = [];
-                let lastTile = null;
-                for (let j = from; j !== to; j += dj) {
-                    const tile = (direction === DIRECTIONS.LEFT || direction === DIRECTIONS.RIGHT)
-                        ? this.board[i][j] 
-                        : this.board[j][i];
-
-                    if (tile !== 0) {
-                        if (lastTile) {
-                            if (lastTile === tile) {
-                                newLine.push(lastTile * 2);
-                                isSomethingChanged = true;
-                                lastTile = null;
-                            }
-                            else {
-                                newLine.push(lastTile);
-                                lastTile = tile;
-                            }
-                        }
-                        else {
-                            lastTile = tile;
-                        }
-                    }
-                }
-
-                if (lastTile) {
-                    newLine.push(lastTile);
-                }
-
-                newLine.push(...new Array(Math.max(0, length - newLine.length)).fill(0));
-
-                if (direction === DIRECTIONS.RIGHT || direction === DIRECTIONS.DOWN) {
-                    newLine.reverse();
-                }
-
-                if (!isSomethingChanged) {
-                    isSomethingChanged = newLine.some((tile, index) => {
-                        let boardTile = this.board[index][i];
-                        if (direction === DIRECTIONS.LEFT || direction === DIRECTIONS.RIGHT) {
-                            boardTile = this.board[i][index];
-                        }   
-                        return tile !== boardTile;
-                    });
-                }
-                
-                newLine.forEach((tile, index) => {
-                    if (direction === DIRECTIONS.LEFT || direction === DIRECTIONS.RIGHT) {
-                        newBoard[i][index] = tile;
-                    } else {
-                        newBoard[index][i] = tile;
-                    }
-                });
-            }
-            return {newBoard, isSomethingChanged};
         }
 
-        const {newBoard, isSomethingChanged} = makeMove();
-
-        if (isSomethingChanged) {
-            this.board = createNewBoard(newBoard);
-        }
-
-        return isSomethingChanged;
+        return transposedBoard;
     }
 
-    if (move()) {
+    let board = needToTranspose 
+        ? transposeBoard(this.board) 
+        : createNewBoard(this.board);
+
+    const shiftedRows = board.reduce((shifted, row) => {
+        shifted.push(row.filter(n => n !== 0));
+        return shifted;
+    }, []);
+
+    const mergedBoard = shiftedRows.reduce((merged, row) => {
+        const _row = needToReverse ? row.reverse() : [...row];
+        let isMerged = false;
+        const mergedRow = _row.reduce((mergedRow, n, i) => {
+            if (mergedRow.length && mergedRow[mergedRow.length - 1] === n && !isMerged) {
+                mergedRow[mergedRow.length - 1] += n;
+                isMerged = true;
+            } else {
+                mergedRow.push(n);
+                isMerged = false;
+            }
+            return mergedRow;
+        }, []);
+
+        const zerosArray = new Array(board.length - mergedRow.length).fill(0);
+        merged.push(needToReverse 
+            ? zerosArray.concat(mergedRow.reverse()) 
+            : mergedRow.concat(zerosArray)
+        );
+        
+        return merged;
+    }, [])
+
+    board = needToTranspose 
+        ? transposeBoard(mergedBoard) 
+        : createNewBoard(mergedBoard);
+    
+    const isSomethingChanged = board.some((row, i) =>
+        row.some((n, j) => n !== this.board[i][j])
+    );
+
+    // do this turn
+    if (isSomethingChanged) {
+        this.board = board;
         this.setNewTile();
     }
 }
